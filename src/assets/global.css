@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+
+* {
+  font-family: 'Inter', sans-serif;
+}
+
+body {
+  background-color: var(--neutral-background);
+}
+
+:root {
+  /* Background and general colors */
+  --neutral-neutral-700: #161619; 
+  --neutral-neutral-600: #1A1B21; 
+  --neutral-background: #23252C; 
+  --neutral-text: #FFFFFF; 
+  --neutral-muted-text: #C0C0C0; 
+
+  /* Button colors */
+  --button-linkedin-bg: #5093E2; 
+  --button-email-bg: #FFFFFF; 
+  --button-text-dark: #000000; 
+  --button-linkedin-hover-bg: #3a7bbf; 
+  
+  /* Other */
+  --text-highlight: #F3BF99; 
+
+    /* Tema Claro */
+    --background-general-light: #FFFFFF;
+    --background-card-light: #F0F0F0;
+    --background-socials-light: #E8E8E8;
+    --text-primary-light: #1A1B21;
+    --text-secondary-light: #4F4F4F;
+}
+
