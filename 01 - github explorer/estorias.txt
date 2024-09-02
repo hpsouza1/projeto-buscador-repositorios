@@ -1,0 +1,70 @@
+Exemplo:
+https://matheuscastroweb-github-explorer.netlify.app/
+
+https://api.github.com/
+https://api.github.com/repos/Rocketseat/frontend-challenge
+https://api.github.com/repos/Rocketseat/frontend-challenge/issues
+
+https://api.github.com/
+https://api.github.com/repos/angular/angular
+https://api.github.com/repos/angular/angular/issues
+
+facebook/react
+
+
+ESTUDAR:
+ - Rotas no vueJS
+ - Axios
+ - Componentização dos itens da tela
+
+
+História de Usuário: Busca e Listagem de Repositórios do GitHub
+
+EU COMO usuário do website
+DESEJO buscar e listar repositórios do GitHub
+PARA visualizar informações detalhadas sobre eles.
+
+CRITÉRIOS DE ACEITE
+
+01 - O usuário deve ser capaz de buscar repositórios usando a chave de busca no formato 'usuário/repositorio' (ex: angular/angular).
+
+02 - Se o repositório não for encontrado, um feedback visual deve ser fornecido ao usuário informando que o repositório não foi encontrado.
+
+03 - Se o repositório for encontrado, deve ser listado um card com a foto do usuário e o nome do repositório.
+
+04 - Ao clicar no card do repositório, deve ser aberta uma tela com a lista de stars, forks e open issues do repositório.
+
+05 - A lista de issues deve ser apresentada em formato de card.
+
+06 - Ao clicar em um card de issue, o usuário deve ser redirecionado para a issue no GitHub.
+
+07 - Deve haver um botão para voltar à tela principal.
+
+BDDs
+
+Cenário 01: Busca por repositório não encontrado
+DADO que o usuário insira uma chave de busca inválida ou de um repositório inexistente
+QUANDO a busca for realizada
+ENTÃO um feedback visual deve ser fornecido informando que o repositório não foi encontrado.
+
+Cenário 02: Busca por repositório encontrado
+DADO que o usuário insira uma chave de busca válida de um repositório existente
+QUANDO a busca for realizada
+ENTÃO um card com a foto do usuário e o nome do repositório deve ser listado.
+
+Cenário 03: Visualização de detalhes do repositório
+DADO que o usuário clique no card de um repositório
+QUANDO a nova tela for aberta
+ENTÃO uma lista de stars, forks e open issues do repositório deve ser apresentada.
+
+Cenário 04: Redirecionamento para issue
+DADO que o usuário clique em um card de issue
+QUANDO o redirecionamento for realizado
+ENTÃO o usuário deve ser levado para a issue no GitHub.
+
+Cenário 05: Retorno para a tela principal
+DADO que o usuário esteja na tela de detalhes de um repositório
+QUANDO o usuário clique no botão de voltar
+ENTÃO o usuário deve ser levado de volta para a tela principal.
+
+
