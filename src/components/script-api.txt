@@ -1,0 +1,31 @@
+<script>
+import SearchComponent from "./components/SearchComponent.vue";
+import RepositoryList from "./components/RepositoryList.vue";
+
+export default {
+  name: "App",
+  components: {
+    SearchComponent,
+    RepositoryList,
+  },
+  data() {
+    return {
+      darkMode: false,
+      repositories: []
+    };
+  },
+  methods: {
+    toggleDarkMode() {
+      this.darkMode = !this.darkMode;
+    },
+    fetchRepositories(query) {
+      // Aqui você vai chamar a API do GitHub para buscar os repositórios
+      // E então preencher o array repositories com os dados da resposta
+    },
+    showRepositoryDetails(repo) {
+      console.log("Repositório selecionado:", repo);
+      // Lógica para mostrar os detalhes do repositório selecionado
+    }
+  }
+};
+</script>
