@@ -1,11 +1,11 @@
 <template>
   <div class="conteiner-central">
     <div class="search-container">
-        <div class="conteiner-h1">
-            <div class="subconteiner-h1">
-                <h1 class="title">Explore repositórios no Github.</h1>
-            </div>
+      <div class="conteiner-h1">
+        <div class="subconteiner-h1">
+          <h1 class="title">Explore repositórios no Github.</h1>
         </div>
+      </div>
       <div class="search-bar">
         <input
           type="text"
@@ -33,30 +33,31 @@ export default {
   methods: {
     searchRepository() {
       if (this.searchQuery.trim() !== "") {
-        // Lógica para buscar o repositório
-        console.log("Buscando repositório:", this.searchQuery);
+        console.log("Evento search emitido com query:", this.searchQuery);
+        this.$emit("search", this.searchQuery); // Emitindo o evento
       }
     },
   },
 };
 </script>
 
+
 <style scoped>
 /* Estilo do componente */
 .conteiner-central {
   margin-left: 25.5%;
-  border: #04d361 1px solid;
+  /* border: #04d361 1px solid; */
 }
 
 .conteiner-h1 {
   margin-bottom: 20px;
   width: 100%;
-  border: #04d361 1px solid;
+  /* border: #04d361 1px solid; */
 }
 
 .subconteiner-h1{
     width: 69%;
-    border: #04d361 1px solid;  
+    /* border: #04d361 1px solid;   */
 }
 
 .h1{
@@ -91,7 +92,7 @@ export default {
   flex: 1;
   padding: 20px;
   font-size: 13px;
-  border: 1px solid #ffffff;
+  border: 1px solid #d4d4d4;
   border-radius: 5px 0 0 5px;
 }
 

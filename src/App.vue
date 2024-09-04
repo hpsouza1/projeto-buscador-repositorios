@@ -2,10 +2,11 @@
   <div id="app" class="app-background">
     <header class="header">
       <h1 class="header-title">Github Explorer</h1>
-      <button @click="toggleDarkMode" class="header-dark-mode-button">
+      <!-- <button @click="toggleDarkMode" class="header-dark-mode-button">
         {{ darkMode ? "Desativar Modo Noturno" : "Ativar Modo Noturno" }}
-      </button>
+      </button> -->
     </header>
+    
     <SearchComponent @search="fetchRepositories" />
     <RepositoryList 
       v-if="repositories.length" 
@@ -16,42 +17,39 @@
 </template>
 
 <script>
-import SearchComponent from "./components/SearchComponent.vue";
-import RepositoryList from "./components/RepositoryList.vue";
+import axios from 'axios';
+import SearchComponent from './components/SearchComponent.vue';
+import RepositoryList from './components/RepositoryList.vue';
 
 export default {
-  name: "App",
+  name: 'App',
   components: {
     SearchComponent,
     RepositoryList,
   },
   data() {
     return {
-      darkMode: false,
-      repositories: []
+      repositories: [],
     };
   },
   methods: {
-    toggleDarkMode() {
-      this.darkMode = !this.darkMode;
-      // Aqui você pode alternar as cores para o modo noturno posteriormente
+    async fetchRepositories(query) {
+      try {
+        const response = await axios.get(
+          `https://api.github.com/search/repositories?q=${query}`
+        );
+        this.repositories = response.data.items.map(repo => ({
+          id: repo.id,
+          name: repo.full_name,
+          description: repo.description,
+          avatar: repo.owner.avatar_url,
+        }));
+        console.log('Repositórios carregados:', this.repositories);
+      } catch (error) {
+        console.error('Erro ao buscar repositórios:', error);
+      }
     },
-    fetchRepositories(query) {
-      // Repositório mockado
-      this.repositories = [
-        {
-          id: 1,
-          name: "vuejs/vue",
-          description: "The Progressive JavaScript Framework",
-          avatar: "https://avatars.githubusercontent.com/u/6128107?v=4",
-        }
-      ];
-    },
-    showRepositoryDetails(repo) {
-      console.log("Repositório selecionado:", repo);
-      // Lógica para mostrar os detalhes do repositório selecionado
-    }
-  }
+  },
 };
 </script>
 
