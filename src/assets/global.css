@@ -7,7 +7,7 @@
   --text-color: #333333;
   --secondary-text-color: #666666;
   --border-color: #cccccc;
-  --hover-background-color: #f9f9f9;
+  --hover-background-color: #ebebeb;
   --button-color: #04d361;
   --button-hover-color: #03c156;
   
@@ -22,12 +22,12 @@
   --button-hover-color: #03c156;
 }
 
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: white;
   color: var(--title-color);
 }
 

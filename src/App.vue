@@ -1,18 +1,16 @@
 <template>
-  <div id="app" class="app-background">
+  <div id="app" :class="{'dark-mode': darkMode, 'app-background': true}">
     <header class="header">
-      <h1 class="header-title">Github Explorer</h1>
-      <!-- <button @click="toggleDarkMode" class="header-dark-mode-button">
-        {{ darkMode ? "Desativar Modo Noturno" : "Ativar Modo Noturno" }}
-      </button> -->
+      <img :src="darkMode ? require('./assets/logo-dark.svg') : require('./assets/logo.svg')" alt="Logo" class="header-logo" />
+      <button @click="toggleDarkMode" class="header-dark-mode-button">
+        {{ darkMode ? "Desativar Modo Dark" : "Ativar Modo Dark" }}
+      </button>
+      <button v-if="selectedRepository" @click="goBack" class="back-button">Voltar</button>
     </header>
-    
-    <SearchComponent @search="fetchRepositories" />
-    <RepositoryList 
-      v-if="repositories.length" 
-      :repos="repositories" 
-      @repository-selected="showRepositoryDetails"
-    />
+
+    <SearchComponent v-if="!selectedRepository" @search="fetchRepositories" />
+    <RepositoryList v-if="!selectedRepository && repositories.length" :repos="repositories" @repository-selected="showRepositoryDetails" />
+    <RepositoryDetails v-if="selectedRepository" :repo="selectedRepository" @go-back="goBack" />
   </div>
 </template>
 
@@ -20,39 +18,52 @@
 import axios from 'axios';
 import SearchComponent from './components/SearchComponent.vue';
 import RepositoryList from './components/RepositoryList.vue';
+import RepositoryDetails from './components/RepositoryDetails.vue';
 
 export default {
   name: 'App',
   components: {
     SearchComponent,
     RepositoryList,
+    RepositoryDetails,
   },
   data() {
     return {
       repositories: [],
+      selectedRepository: null,
+      darkMode: false,
     };
   },
   methods: {
+    toggleDarkMode() {
+      this.darkMode = !this.darkMode;
+    },
     async fetchRepositories(query) {
       try {
-        const response = await axios.get(
-          `https://api.github.com/search/repositories?q=${query}`
-        );
+        const response = await axios.get(`https://api.github.com/search/repositories?q=${query}`);
         this.repositories = response.data.items.map(repo => ({
           id: repo.id,
           name: repo.full_name,
           description: repo.description,
           avatar: repo.owner.avatar_url,
+          stars: repo.stargazers_count,
+          forks: repo.forks,
+          openIssues: repo.open_issues,
         }));
-        console.log('Repositórios carregados:', this.repositories);
       } catch (error) {
         console.error('Erro ao buscar repositórios:', error);
       }
     },
+    showRepositoryDetails(repo) {
+      this.selectedRepository = repo;
+    },
+    goBack() {
+      this.selectedRepository = null;
+    },
   },
 };
 </script>
-
+  
 <style scoped>
 .app-background {
   background-image: url("./assets/github-background.svg");
@@ -68,6 +79,12 @@ export default {
   color: var(--title-color);
 }
 
+/* Estilos para o modo escuro */
+.dark-mode .app-background {
+  background-image: none; /* Remove a imagem de fundo */
+  background-color: #1a1a1a;
+}
+
 .header {
   background-color: var(--header-background-color);
   padding: 10px;
@@ -75,6 +92,11 @@ export default {
   justify-content: space-evenly; /* Ajustando a posição dos elementos */
   align-items: center;
   width: 100%;
+}
+
+.header-logo {
+  max-width: 150px;
+  height: auto;
 }
 
 .header-title {
@@ -85,15 +107,15 @@ export default {
 
 .header-dark-mode-button {
   padding: 5px;
-  background-color: transparent;
+  background-color: var(--button-color);
   border: 1px black none;
   border-radius: 4px;
   font-size: 1rem;
   cursor: pointer;
-  color: var(--title-color);
+  color: var(--text-color);
 }
 
 .header-dark-mode-button:hover {
-  background-color: #21f37c; /* Cor do botão ao passar o mouse */
+  background-color: var(--button-hover-color); /* Cor do botão ao passar o mouse */
 }
 </style>
