@@ -46,6 +46,7 @@ export default {
 /* Estilo do componente */
 .conteiner-central {
   margin-left: 25.5%;
+  margin-bottom: 70px;
   /* border: #04d361 1px solid; */
 }
 

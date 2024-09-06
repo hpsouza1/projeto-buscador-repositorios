@@ -2,11 +2,14 @@
   <div class="repository-list">
     <div v-for="repo in repos" :key="repo.id" class="repository-card" @click="selectRepository(repo)">
       <img :src="repo.avatar" alt="Repo Avatar" class="repo-avatar" />
-      <h2>{{ repo.name }}</h2>
-      <p>{{ repo.description }}</p>
+      <div class="repository-info">
+        <h2>{{ repo.name }}</h2>
+        <p>{{ repo.description }}</p>
+      </div>
     </div>
   </div>
 </template>
+
 
 <script>
 export default {
@@ -25,16 +28,26 @@ export default {
 <style scoped>
 .repository-list {
   display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-left: 25%;
+  width: 100%;
 }
 
 .repository-card {
+  display: flex; /* Para criar um layout flexível */
+  align-items: center; /* Centraliza verticalmente os itens */
   border: 1px solid #ddd;
-  padding: 20px;
+  padding: 10px;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s;
+  width: 100%; /* Ocupa 100% da largura do contêiner */
+  max-width: 600px; /* Limita a largura máxima */
+  margin-bottom: 10px;
+  margin-top: 10px;
+  height: auto; /* Remove a altura fixa */
+  box-sizing: border-box;
 }
 
 .repository-card:hover {
@@ -42,8 +55,35 @@ export default {
 }
 
 .repo-avatar {
+  flex-shrink: 0; /* Impede que a imagem encolha */
   width: 50px;
   height: 50px;
   border-radius: 50%;
+  margin-right: 10px; /* Espaçamento entre a imagem e o texto */
 }
+
+.repository-info {
+  display: flex;
+  flex-direction: column; /* Alinha o título e a descrição em coluna */
+  text-overflow: ellipsis; /* Adiciona "..." quando o texto for muito longo */
+  overflow: hidden
+}
+
+h2, p {
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis; /* Adiciona "..." quando o texto for muito longo */
+  white-space: nowrap; /* Impede que o texto quebre em várias linhas */
+}
+
+h2 {
+  font-size: 1.2em;
+  margin-bottom: 5px;
+}
+
+p {
+  font-size: 0.9em;
+  color: #666;
+}
+
 </style>

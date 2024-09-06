@@ -118,4 +118,18 @@ export default {
 .header-dark-mode-button:hover {
   background-color: var(--button-hover-color); /* Cor do botão ao passar o mouse */
 }
+
+.back-button {
+  padding: 5px;
+  background-color: var(--button-color);
+  border: 1px black none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  color: var(--text-color);
+}
+
+.back-button:hover {
+  background-color: var(--button-hover-color); /* Cor do botão ao passar o mouse */
+}
 </style>

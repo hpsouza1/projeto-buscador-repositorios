@@ -25,21 +25,4 @@ export default {
 </script>
 
 <style scoped>
-.repository-card {
-  cursor: pointer;
-  border: 1px solid #ddd;
-  padding: 20px;
-  border-radius: 5px;
-  transition: background-color 0.3s;
-}
-
-.repository-card:hover {
-  background-color: #f9f9f9;
-}
-
-.avatar {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-}
 </style>
