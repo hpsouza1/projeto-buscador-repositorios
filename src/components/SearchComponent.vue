@@ -18,6 +18,7 @@
           Pesquisar
         </button>
       </div>
+      <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
     </div>
   </div>
 </template>
@@ -25,6 +26,9 @@
 <script>
 export default {
   name: "SearchComponent",
+  props: {
+    errorMessage: String, // Adicionando prop para a mensagem de erro
+  },
   data() {
     return {
       searchQuery: "",
@@ -64,6 +68,7 @@ export default {
 .h1{
     font-size: 48px;
     font-weight: bolder;
+    color: var(--title-color);
 }
 
 .search-container {
@@ -93,14 +98,14 @@ export default {
   flex: 1;
   padding: 20px;
   font-size: 13px;
-  border: 1px solid #d4d4d4;
+  border: 1px solid var(--border-color);
   border-radius: 5px 0 0 5px;
 }
 
 .search-button {
   padding: 22px;
-  background-color: #04d361;
-  color: white;
+  background-color: var(--button-color);
+  color: var(--text-color);
   font-size: 12px;
   font-weight: bolder;
   border: none;
@@ -110,6 +115,12 @@ export default {
 }
 
 .search-button:hover {
-  background-color: #03c156; /* Cor do botão ao passar o mouse */
+  background-color: var(--button-hover-color); /* Cor do botão ao passar o mouse */
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
+  font-size: 14px;
 }
 </style>

@@ -1,5 +1,6 @@
 <template>
   <div id="app" :class="{'dark-mode': darkMode, 'app-background': true}">
+
     <header class="header">
       <img :src="darkMode ? require('./assets/logo-dark.svg') : require('./assets/logo.svg')" alt="Logo" class="header-logo" />
       <button @click="toggleDarkMode" class="header-dark-mode-button">
@@ -8,9 +9,10 @@
       <button v-if="selectedRepository" @click="goBack" class="back-button">Voltar</button>
     </header>
 
-    <SearchComponent v-if="!selectedRepository" @search="fetchRepositories" />
+    <SearchComponent v-if="!selectedRepository" @search="fetchRepositories" :errorMessage="errorMessage"/>
     <RepositoryList v-if="!selectedRepository && repositories.length" :repos="repositories" @repository-selected="showRepositoryDetails" />
     <RepositoryDetails v-if="selectedRepository" :repo="selectedRepository" @go-back="goBack" />
+
   </div>
 </template>
 
@@ -32,13 +34,17 @@ export default {
       repositories: [],
       selectedRepository: null,
       darkMode: false,
+      darkMode: JSON.parse(localStorage.getItem('darkMode')) || false, // Armazena no localStorage
+      errorMessage: null, // Nova propriedade para gerenciar a mensagem de erro
     };
   },
   methods: {
     toggleDarkMode() {
       this.darkMode = !this.darkMode;
+      localStorage.setItem('darkMode', JSON.stringify(this.darkMode)); // Salva a preferência do usuário
     },
     async fetchRepositories(query) {
+      this.errorMessage = null; // Reseta a mensagem de erro antes da nova busca
       try {
         const response = await axios.get(`https://api.github.com/search/repositories?q=${query}`);
         this.repositories = response.data.items.map(repo => ({
@@ -50,7 +56,11 @@ export default {
           forks: repo.forks,
           openIssues: repo.open_issues,
         }));
+        if (this.repositories.length === 0) {
+          this.errorMessage = 'Nenhum repositório encontrado para essa busca.';
+        }
       } catch (error) {
+        this.errorMessage = 'Erro ao buscar repositórios. Por favor, tente novamente mais tarde.';
         console.error('Erro ao buscar repositórios:', error);
       }
     },
@@ -66,30 +76,30 @@ export default {
   
 <style scoped>
 .app-background {
-  background-image: url("./assets/github-background.svg");
-  background-size: 50%;
-  background-repeat: no-repeat;
-  background-position: right;
   min-height: 100vh;
   display: flex;
   justify-content: top;
   align-items: flex-start;
   flex-direction: column;
-  padding: 20px; /* Espaçamento das bordas */
+  padding: 20px;
   color: var(--title-color);
+  background-color: var(--background-color); /* Use a variável para a cor de fundo */
+  transition: background-color 0.3s;
 }
 
 /* Estilos para o modo escuro */
 .dark-mode .app-background {
-  background-image: none; /* Remove a imagem de fundo */
-  background-color: #1a1a1a;
+  background-image: none;
+  background-color: var(--background-color);
+  transition: background-color 0.3s;
 }
 
 .header {
-  background-color: var(--header-background-color);
+  transition: background-color 0.3s;
+  background-color: var(--background-color);
   padding: 10px;
   display: flex;
-  justify-content: space-evenly; /* Ajustando a posição dos elementos */
+  justify-content: space-evenly;
   align-items: center;
   width: 100%;
 }
@@ -106,9 +116,10 @@ export default {
 }
 
 .header-dark-mode-button {
+  transition: background-color 0.3s;
   padding: 5px;
   background-color: var(--button-color);
-  border: 1px black none;
+  border: 1px solid var(--border-color);
   border-radius: 4px;
   font-size: 1rem;
   cursor: pointer;
@@ -116,13 +127,13 @@ export default {
 }
 
 .header-dark-mode-button:hover {
-  background-color: var(--button-hover-color); /* Cor do botão ao passar o mouse */
+  background-color: var(--button-hover-color);
 }
 
 .back-button {
   padding: 5px;
   background-color: var(--button-color);
-  border: 1px black none;
+  border: 1px solid var(--border-color);
   border-radius: 4px;
   font-size: 1rem;
   cursor: pointer;
@@ -130,6 +141,6 @@ export default {
 }
 
 .back-button:hover {
-  background-color: var(--button-hover-color); /* Cor do botão ao passar o mouse */
+  background-color: var(--button-hover-color);
 }
 </style>

@@ -107,7 +107,8 @@
 }
 
 .issue-card {
-  border: 1px solid #ddd;
+  background-color: var(--background-color);
+  border: 1px solid var(--border-color);
   padding: 10px;
   border-radius: 5px;
   cursor: pointer;
@@ -138,7 +139,7 @@ h3 {
 
 p {
   font-size: 0.9em;
-  color: #666;
+  color: var(--text-color);
   max-height: 2.5em; /* Limita a altura da descrição */
 }
 
@@ -148,7 +149,7 @@ p {
 }
 
 .issue-card:hover {
-  background-color: #f9f9f9;
+  background-color: var(--hover-background-color);
 }
 
   </style>

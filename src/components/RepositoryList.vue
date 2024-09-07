@@ -37,7 +37,8 @@ export default {
 .repository-card {
   display: flex; /* Para criar um layout flexível */
   align-items: center; /* Centraliza verticalmente os itens */
-  border: 1px solid #ddd;
+  background-color: var(--background-color);
+  border: 1px solid var(--border-color);
   padding: 10px;
   border-radius: 5px;
   cursor: pointer;
@@ -51,7 +52,7 @@ export default {
 }
 
 .repository-card:hover {
-  background-color: #f5f5f5;
+  background-color: var(--hover-background-color);
 }
 
 .repo-avatar {
@@ -79,11 +80,12 @@ h2, p {
 h2 {
   font-size: 1.2em;
   margin-bottom: 5px;
+  color: var(--title-color);
 }
 
 p {
   font-size: 0.9em;
-  color: #666;
+  color: var(--text-color);
 }
 
 </style>
