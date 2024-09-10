@@ -34,38 +34,57 @@
   </div>
 </template>
 
+<script>
+import axios from "axios";
 
-  
-  <script>
-  import axios from 'axios';
-  
-  export default {
-    name: 'RepositoryDetails',
-    props: {
-      repo: Object
-    },
-    data() {
-      return {
-        issues: []
+export default {
+  name: "RepositoryDetails",
+  props: {
+    repo: Object,
+  },
+  data() {
+    return {
+      issues: [],
+    };
+  },
+  async created() {
+    const fullRepoName = this.$route.params.repoName;
+
+    try {
+      const response = await axios.get(
+        `https://api.github.com/repos/${fullRepoName}`
+      );
+      this.repo = {
+        name: response.data.full_name,
+        avatar: response.data.owner.avatar_url,
+        description: response.data.description,
+        stars: response.data.stargazers_count,
+        forks: response.data.forks_count,
+        openIssues: response.data.open_issues_count,
       };
-    },
-    async created() {
-      await this.fetchIssues();
-    },
-    methods: {
-      async fetchIssues() {
-        try {
-          const response = await axios.get(`https://api.github.com/repos/${this.repo.name}/issues`);
-          this.issues = response.data;
-        } catch (error) {
-          console.error('Erro ao buscar issues:', error);
-        }
-      }
+      this.fetchIssues(); // Chama o fetchIssues após repo ser definido
+    } catch (error) {
+      console.error("Erro ao buscar detalhes do repositório:", error);
     }
-  }
-  </script>
-  
-  <style scoped>
+  },
+  methods: {
+    async fetchIssues() {
+      if (!this.repo || !this.repo.name) return;
+      try {
+        const response = await axios.get(
+          `https://api.github.com/repos/${this.repo.name}/issues`
+        );
+        this.issues = response.data;
+      } catch (error) {
+        console.error("Erro ao buscar issues:", error);
+      }
+    },
+  },
+};
+</script>
+
+
+<style scoped>
 .repository-details {
   padding: 20px;
   margin-left: 14%;
@@ -125,7 +144,8 @@
   flex-direction: column;
 }
 
-h3, p {
+h3,
+p {
   margin: 0;
   overflow: hidden;
   text-overflow: ellipsis; /* Adiciona "..." quando o texto for muito longo */
@@ -151,6 +171,4 @@ p {
 .issue-card:hover {
   background-color: var(--hover-background-color);
 }
-
-  </style>
-  
+</style>
