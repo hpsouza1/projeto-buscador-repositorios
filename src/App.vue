@@ -1,115 +1,38 @@
+<!-- src/App.vue -->
 <template>
   <div id="app" :class="{'dark-mode': darkMode, 'app-background': true}">
-
     <header class="header">
       <img :src="darkMode ? require('./assets/logo-dark.svg') : require('./assets/logo.svg')" alt="Logo" class="header-logo" />
       <button @click="toggleDarkMode" class="header-dark-mode-button">
         {{ darkMode ? "Desativar Modo Dark" : "Ativar Modo Dark" }}
       </button>
-      <button v-if="selectedRepository" @click="goBack" class="back-button">Voltar</button>
     </header>
-
-    <SearchComponent v-if="!selectedRepository" @search="fetchRepositories" :errorMessage="errorMessage"/>
-    <RepositoryList v-if="!selectedRepository && repositories.length" :repos="repositories" @repository-selected="showRepositoryDetails" />
-    <RepositoryDetails v-if="selectedRepository" :repo="selectedRepository" @go-back="goBack" />
-
+    <router-view />
   </div>
 </template>
 
 <script>
-import axios from 'axios';
-import SearchComponent from './components/SearchComponent.vue';
-import RepositoryList from './components/RepositoryList.vue';
-import RepositoryDetails from './components/RepositoryDetails.vue';
-
 export default {
   name: 'App',
-  components: {
-    SearchComponent,
-    RepositoryList,
-    RepositoryDetails,
-  },
   data() {
     return {
-      repositories: [],
-      selectedRepository: null,  
-      darkMode: JSON.parse(localStorage.getItem('darkMode')) || false, 
-      errorMessage: null,  
+      darkMode: JSON.parse(localStorage.getItem('darkMode')) || false,
     };
   },
   methods: {
     toggleDarkMode() {
       this.darkMode = !this.darkMode;
-      localStorage.setItem('darkMode', JSON.stringify(this.darkMode)); 
-
+      localStorage.setItem('darkMode', JSON.stringify(this.darkMode));
     },
-    async fetchRepositories(query) {
-      this.errorMessage = null;
-
-      try {
-        const response = await axios.get(`https://api.github.com/search/repositories?q=${query}`);
-
-        // Armazena apenas o primeiro resultado
-        if (response.data.items.length > 0) {
-          const repo = response.data.items[0];
-          const repository = {
-            id: repo.id,
-            name: repo.full_name,
-            description: repo.description,
-            avatar: repo.owner.avatar_url,
-            stars: repo.stargazers_count,
-            forks: repo.forks,
-            openIssues: repo.open_issues,
-          };
-
-          // Salvar no localStorage
-          this.saveRepository(repository);
-
-          // Adiciona o repositório na lista
-          this.repositories.push(repository);
-
-        } else {
-          this.errorMessage = 'Nenhum repositório encontrado para essa busca.';
-        }
-      } catch (error) {
-        this.errorMessage = 'Erro ao buscar repositórios. Por favor, tente novamente mais tarde.';
-        console.error('Erro ao buscar repositórios:', error);
-      }
-    },
-    saveRepository(repo) {
-      let storedRepositories = JSON.parse(localStorage.getItem('repositories')) || [];
-
-      // Verifica se o repositório já está salvo
-      const repoExists = storedRepositories.some(storedRepo => storedRepo.id === repo.id);
-
-      if (!repoExists) {
-        storedRepositories.push(repo);
-        localStorage.setItem('repositories', JSON.stringify(storedRepositories));
-      }
-    },
-    loadRepositories() {
-      const storedRepositories = JSON.parse(localStorage.getItem('repositories'));
-      if (storedRepositories) {
-        this.repositories = storedRepositories;
-      }
-    },
-    showRepositoryDetails(repo) {
-      this.selectedRepository = repo;
-    },
-    goBack() {
-      this.selectedRepository = null;
-    },
-  },
-  mounted() {
-    this.loadRepositories(); // Carrega os repositórios do localStorage ao iniciar
   },
 };
 </script>
 
+
   
 <style scoped>
 .app-background {
-  min-height: 100vh;
+  min-height: 00vh;
   display: flex;
   justify-content: top;
   align-items: flex-start;

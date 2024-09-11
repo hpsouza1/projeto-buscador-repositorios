@@ -1,7 +1,7 @@
 <template>
-  <div class="repository-details">
+  <div class="repository-details" v-if="repo">
     <div class="repository-header">
-      <img :src="repo.avatar" alt="Repository Avatar" class="avatar" />
+      <img :src="repo.owner.avatar_url" alt="Repo Avatar" class="repo-avatar" />
       <div class="repository-info">
         <h1>{{ repo.name }}</h1>
         <p>{{ repo.description }}</p>
@@ -9,15 +9,15 @@
     </div>
     <div class="repository-kpis">
       <div class="kpi">
-        <h2>{{ repo.stars }}</h2>
+        <h2>{{ repo.stargazers_count }}</h2>
         <p>Stars</p>
       </div>
       <div class="kpi">
-        <h2>{{ repo.forks }}</h2>
+        <h2>{{ repo.forks_count }}</h2>
         <p>Forks</p>
       </div>
       <div class="kpi">
-        <h2>{{ repo.openIssues }}</h2>
+        <h2>{{ repo.open_issues_count }}</h2>
         <p>Issues</p>
       </div>
     </div>
@@ -32,40 +32,47 @@
       </div>
     </div>
   </div>
+  <p v-else>Loading...</p>
 </template>
 
+<script>
+import axios from "axios";
 
-  
-  <script>
-  import axios from 'axios';
-  
-  export default {
-    name: 'RepositoryDetails',
-    props: {
-      repo: Object
-    },
-    data() {
-      return {
-        issues: []
-      };
-    },
-    async created() {
-      await this.fetchIssues();
-    },
-    methods: {
-      async fetchIssues() {
-        try {
-          const response = await axios.get(`https://api.github.com/repos/${this.repo.name}/issues`);
+export default {
+  name: "RepositoryDetails",
+  props: {
+    repo: Object,
+  },
+  data() {
+    return {
+      issues: [],
+      errorMessage: null,
+    };
+  },
+  created() {
+    this.fetchIssues();
+  },
+  methods: {
+    async fetchIssues() {
+      try {
+        if (this.repo && this.repo.full_name) {
+          const response = await axios.get(
+            `https://api.github.com/repos/${this.repo.full_name}/issues`
+          );
           this.issues = response.data;
-        } catch (error) {
-          console.error('Erro ao buscar issues:', error);
+        } else {
+          this.errorMessage = "Repositório não encontrado.";
         }
+      } catch (error) {
+        this.errorMessage = "Erro ao buscar issues.";
+        console.error("Erro ao buscar issues:", error);
       }
-    }
-  }
-  </script>
-  
-  <style scoped>
+    },
+  },
+};
+</script>
+
+<style scoped>
 .repository-details {
   padding: 20px;
   margin-left: 14%;
@@ -78,7 +85,7 @@
   margin-bottom: 20px;
 }
 
-.avatar {
+.repo-avatar {
   width: 100px;
   height: 100px;
   border-radius: 50%;
@@ -125,7 +132,8 @@
   flex-direction: column;
 }
 
-h3, p {
+h3,
+p {
   margin: 0;
   overflow: hidden;
   text-overflow: ellipsis; /* Adiciona "..." quando o texto for muito longo */
@@ -151,6 +159,4 @@ p {
 .issue-card:hover {
   background-color: var(--hover-background-color);
 }
-
-  </style>
-  
+</style>
