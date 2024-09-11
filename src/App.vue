@@ -32,36 +32,65 @@ export default {
   data() {
     return {
       repositories: [],
-      selectedRepository: null,
-      darkMode: false,
-      darkMode: JSON.parse(localStorage.getItem('darkMode')) || false, // Armazena no localStorage
-      errorMessage: null, // Nova propriedade para gerenciar a mensagem de erro
+      selectedRepository: null,  
+      darkMode: JSON.parse(localStorage.getItem('darkMode')) || false, 
+      errorMessage: null,  
     };
   },
   methods: {
     toggleDarkMode() {
       this.darkMode = !this.darkMode;
-      localStorage.setItem('darkMode', JSON.stringify(this.darkMode)); // Salva a preferência do usuário
+      localStorage.setItem('darkMode', JSON.stringify(this.darkMode)); 
+
     },
     async fetchRepositories(query) {
-      this.errorMessage = null; // Reseta a mensagem de erro antes da nova busca
+      this.errorMessage = null;
+
       try {
         const response = await axios.get(`https://api.github.com/search/repositories?q=${query}`);
-        this.repositories = response.data.items.map(repo => ({
-          id: repo.id,
-          name: repo.full_name,
-          description: repo.description,
-          avatar: repo.owner.avatar_url,
-          stars: repo.stargazers_count,
-          forks: repo.forks,
-          openIssues: repo.open_issues,
-        }));
-        if (this.repositories.length === 0) {
+
+        // Armazena apenas o primeiro resultado
+        if (response.data.items.length > 0) {
+          const repo = response.data.items[0];
+          const repository = {
+            id: repo.id,
+            name: repo.full_name,
+            description: repo.description,
+            avatar: repo.owner.avatar_url,
+            stars: repo.stargazers_count,
+            forks: repo.forks,
+            openIssues: repo.open_issues,
+          };
+
+          // Salvar no localStorage
+          this.saveRepository(repository);
+
+          // Adiciona o repositório na lista
+          this.repositories.push(repository);
+
+        } else {
           this.errorMessage = 'Nenhum repositório encontrado para essa busca.';
         }
       } catch (error) {
         this.errorMessage = 'Erro ao buscar repositórios. Por favor, tente novamente mais tarde.';
         console.error('Erro ao buscar repositórios:', error);
+      }
+    },
+    saveRepository(repo) {
+      let storedRepositories = JSON.parse(localStorage.getItem('repositories')) || [];
+
+      // Verifica se o repositório já está salvo
+      const repoExists = storedRepositories.some(storedRepo => storedRepo.id === repo.id);
+
+      if (!repoExists) {
+        storedRepositories.push(repo);
+        localStorage.setItem('repositories', JSON.stringify(storedRepositories));
+      }
+    },
+    loadRepositories() {
+      const storedRepositories = JSON.parse(localStorage.getItem('repositories'));
+      if (storedRepositories) {
+        this.repositories = storedRepositories;
       }
     },
     showRepositoryDetails(repo) {
@@ -71,8 +100,12 @@ export default {
       this.selectedRepository = null;
     },
   },
+  mounted() {
+    this.loadRepositories(); // Carrega os repositórios do localStorage ao iniciar
+  },
 };
 </script>
+
   
 <style scoped>
 .app-background {
