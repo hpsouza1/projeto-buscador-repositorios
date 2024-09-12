@@ -1,7 +1,7 @@
 <template>
   <div class="repository-details" v-if="repo">
     <div class="repository-header">
-      <img :src="repo.owner.avatar_url" alt="Repo Avatar" class="repo-avatar" />
+      <img :src="repo.avatar" alt="Repo Avatar" class="repo-avatar" />
       <div class="repository-info">
         <h1>{{ repo.name }}</h1>
         <p>{{ repo.description }}</p>
@@ -9,15 +9,15 @@
     </div>
     <div class="repository-kpis">
       <div class="kpi">
-        <h2>{{ repo.stargazers_count }}</h2>
+        <h2>{{ repo.stars }}</h2>
         <p>Stars</p>
       </div>
       <div class="kpi">
-        <h2>{{ repo.forks_count }}</h2>
+        <h2>{{ repo.forks }}</h2>
         <p>Forks</p>
       </div>
       <div class="kpi">
-        <h2>{{ repo.open_issues_count }}</h2>
+        <h2>{{ repo.openIssues }}</h2>
         <p>Issues</p>
       </div>
     </div>
@@ -50,14 +50,15 @@ export default {
     };
   },
   created() {
+    console.log('Repository:', this.repo);
     this.fetchIssues();
   },
   methods: {
     async fetchIssues() {
       try {
-        if (this.repo && this.repo.full_name) {
+        if (this.repo && this.repo.name) {
           const response = await axios.get(
-            `https://api.github.com/repos/${this.repo.full_name}/issues`
+            `https://api.github.com/repos/${this.repo.name}/issues`
           );
           this.issues = response.data;
         } else {
@@ -71,6 +72,7 @@ export default {
   },
 };
 </script>
+
 
 <style scoped>
 .repository-details {
